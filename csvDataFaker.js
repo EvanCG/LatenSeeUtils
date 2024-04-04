@@ -4,6 +4,11 @@ const { stringify } = require('csv-stringify/sync');
 
 // Merged all CSV files into one with https://merge-csv.com/
 
+/**
+ * Reads all of the objects in merged.csv and then returns an array
+ *
+ * @returns array of objects from merged.csv
+ */
 const readData = async () => {
   const result = [];
 
@@ -18,9 +23,12 @@ const readData = async () => {
   });
 };
 
-// read through merged.csv and create an object with the results of all of the data
-
-// console.log(result);
+/**
+ *
+ * Takes an array of raw objects and fills in missing data with 'true', decrements by number of days between 0-8 and sorts data
+ *
+ * @returns Array of objects sorted chronologically
+ */
 const processData = async () => {
   let answer = await readData();
 
@@ -30,12 +38,8 @@ const processData = async () => {
   for (let i = 0; i < answer.length; i++) {
     // if firstRun isn't false, then set it to true
     if (answer[i].firstRun !== 'false') {
-      // set answer to true
       answer[i].firstRun = 'true';
     }
-
-    // console.log('Raw invoke was ', answer[i].invokeTime);
-    // console.log('Invoke date was ', new Date(Number(answer[i].invokeTime)));
 
     // subtract dayAdjustment *  (24hrs in miliseconds) from: invokeTime, serverStart, serverEnd,
     let rowAdjust = dayAdjustment * 86400000;
@@ -44,23 +48,24 @@ const processData = async () => {
     answer[i].serverStart = answer[i].serverStart - rowAdjust;
     answer[i].serverEnd = answer[i].serverEnd - rowAdjust;
 
-    // console.log('Now raw invoke is ', answer[i].invokeTime);
-    // console.log('Now Invoke date is ', new Date(Number(answer[i].invokeTime)));
-
     // Iterate dayAdjustment up to 8, then cycle again
     dayAdjustment = dayAdjustment === 8 ? 0 : dayAdjustment + 1;
   }
 
-  // sort answer
+  // sort answer chronologically
   answer.sort((a, b) => {
-    // console.log(`Comparing ${a.invokeTime} and ${b.invokeTime}: ${a.invokeTime - b.invokeTime}`);
-
     return Number(a.invokeTime) - Number(b.invokeTime);
   });
 
   return answer;
 };
 
+/**
+ * takes array of objects, converts to an array of arrays, and writes that to data.csv
+ * 
+ * Assumes that data.csv already exists and has headers
+ * 
+ */
 const writeData = async () => {
   let finalData = await processData();
 

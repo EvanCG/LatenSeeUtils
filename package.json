@@ -1,0 +1,23 @@
+{
+  "name": "latenseeutils",
+  "version": "1.0.0",
+  "description": "Utility functions for latensee project",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EvanCG/LatenSeeUtils.git"
+  },
+  "author": "Evan Griffith",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EvanCG/LatenSeeUtils/issues"
+  },
+  "homepage": "https://github.com/EvanCG/LatenSeeUtils#readme",
+  "dependencies": {
+    "csv-parser": "^3.0.0",
+    "csv-stringify": "^6.4.6"
+  }
+}
